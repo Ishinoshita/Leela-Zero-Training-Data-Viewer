@@ -13,7 +13,7 @@ By taking advantage of this property (successiveness of positions) it is possibl
 
 Gaining access to the actual move picked in each position allows to reconstruct the whole game and to generate a sfg file with comments on the search policy distribution. This script also outputs a .csv table in which each line corresponds to a training position, with meta data and the basic statistics.
 
-'''
+```
     # Position meta-data:
     chunk_id:          chunk number within training file
     game_id:           game number within the chunk (start at 1)
@@ -44,4 +44,4 @@ Gaining access to the actual move picked in each position allows to reconstruct 
     
     # Commented sgf:
     chunk_XXXX_game_YYYY.sgf : a text file in FF4 format of the game ID YYYY of chunk ID XXXX
- '''
+```
