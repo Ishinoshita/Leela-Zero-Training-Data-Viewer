@@ -1,7 +1,7 @@
 # LZ Training Data Viewer
 Reversing LZ training data into commented sgf files
 
-This is my personal repo to share some analysis I have done on Leela Zero training data. As a way to learn to use Github as well.
+This is my personal repo to share some analysis I have done on Leela Zero training data. As a way to learn to use Github.
 
 Fresh beginner in Python and in object oriented programing, I chose as a toy problem to write a python script that reverses Leela Zero training data into self-play games sgf files, embedding some statistics on the search policy:
 
@@ -54,49 +54,37 @@ This script also outputs a .csv table in which each line corresponds to a traini
 ![image](https://user-images.githubusercontent.com/37498331/46316483-947eaf80-c5d0-11e8-9de1-9e48dc87530a.png)
 
 
-# Summary of my observations
-* **No-resign games proportion reduction from 20% to 10% is clearly visible since https://github.com/gcp/leela-zero/issues/1781#issuecomment-418118795.**
-* **Found weird data! Wondering if some contributors are tinkering with temperature parameter**
-* **Correlation between value collapse and policy flattening
-* **Randomness level in no-resign self-play games is still quite impressive ;-)**
+# Preliminery observations on the training data
 
-* *Samples of sgf and statistics table*
-
-*See readme for methodology*
-
-### Data used
+## Data used
 
 LZ177-generated training data uploaded on 18-Sep-2018 (network hash dec5b9d8, promoted on 15-Sep-2018).
 
-Since I did analysis with Excel (1M line limits), I took arbitrary slices of 100 consecutive chunks, each slice of 100 chunks corresponding to ~3200 games or ~550k to 600k positions. I analysed chunks 0 to 99, then chunks 1000 to 1099 to check that the conclusions were standing and independent from chunks sampling. *However, I didn't anlysed the whole LZ177 data.*
+Since I did analysis with Excel (1M lines limit), I took arbitrary slices of 100 consecutive chunks, each corresponding to ~3200 games or ~550k to 600k positions. I analysed chunks 0 to 99, then chunks 1000 to 1099 to check that the conclusions were standing and independent from chunks sampling.
 
-## Game length distribution
-* LZ156 (estimated 15% of no-resign games)
-![image](https://user-images.githubusercontent.com/37498331/46261575-b48d7080-c4f5-11e8-8c13-e9c909f13b98.png)
-* LZ177
-![image](https://user-images.githubusercontent.com/37498331/46261633-cd4a5600-c4f6-11e8-9844-178ca3fa903b.png)
-
-## Weird data!
+## Found weird data !
 
 I quicly spotted weird policy values in both slices of chunks, not looking like multiples of 1/600th., like here:
 
 ![image](https://user-images.githubusercontent.com/37498331/46261875-fb7d6500-c4f9-11e8-8de8-0245f2b93eeb.png)
 
-Suspecting some flaw in my code (although a priori it does not do any arithmetic processing on the value p_picked_raw, p_max_raw and p_pass_raw, just conversion to float, sorting then back to string), I check the raw training data and found the weird data were already there:
+Suspecting some flaw in my code (although a priori it does not do any arithmetic processing on the values p_picked_raw, p_max_raw and p_pass_raw, just a conversion to float, a sorting step before conversion back to string), I checked the raw training data and found the weird data were already there:
 
 ![image](https://user-images.githubusercontent.com/37498331/46261993-7004d380-c4fb-11e8-8b62-de236773cdc7.png)
 
-0.737846 = 368923/500000, 0.5M not a reasonable number visits !
+    0.737846 = 368923/500000, 0.5M not really a reasonable number of visits ...
 
-I did an in depth sanity check the chunks 1000-1099 and found a surprising high proportion of positions containing such weird data: 40592 / 609087, ie 6.7% (no more in the scale of a pee in the ocean ... ).
+Note that when the policy contains such a weird value, all non-zero policy values are weird in the training sample. As a shortcut, I here after inaccurately designate such values as *non-fractional*, as they look more like real numbers than like fractions of any reasonable number of visits.
 
-I then spotted another kind of weirdness, namely positions where p_picked_raw = p_max_raw = 1 during very long sequence in the game. Such games exhibit a clearly different distribution in terms of p_picked_raw or p_best_10_raw:
+I did an in depth sanity check of the chunks 1000-1099 and found a surprising high proportion of positions containing such non-fractional values: 40592 / 609087, ie 6.7% (not a pee in the ocean ... ).
 
-* Two very standard 300 moves games (left: a no-resign game that hit the resign threshold ~100 moves, right a resign game):
+Then I spotted another kind of weirdness, namely positions where p_picked_raw = p_max_raw = 1 during very long sequence in the game, particularly early in the game. Such games exhibit a clearly different distribution in terms of p_picked_raw or p_best_10_raw:
+
+* To start with, two very standard 300 moves games (left: a no-resign game that probably hit the resign threshold ~100 moves; right a resign game):
 ![image](https://user-images.githubusercontent.com/37498331/46262164-a8a5ac80-c4fd-11e8-9910-9d9c626efd26.png)
 and their sgf:  [chunk_1002_game_7.zip](https://github.com/Ishinoshita/LZ-Training-Data-Viewer/files/2432011/chunk_1002_game_7.zip), [chunk_1004_game_29.zip](https://github.com/Ishinoshita/LZ-Training-Data-Viewer/files/2432012/chunk_1004_game_29.zip)
 
-* Two 320 moves games (right: yer another normal no-resign game, left an out-of-distribution game): 
+* Then, two 320 moves games (right: yer another normal no-resign game; left: what I call an out-of-distribution game): 
 ![image](https://user-images.githubusercontent.com/37498331/46262178-c541e480-c4fd-11e8-8782-589ba62aaa76.png)
 
 Although p_max_raw = 1 may not be strictly impossible, a series of such values seems almost impossible.
