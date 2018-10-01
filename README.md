@@ -9,7 +9,7 @@ Fresh beginner in Python and in object oriented programing, I chose as a toy pro
 
 ## Methodology
 
-Empirically, I have found that LZ training data files consist in a series of training sample corresponding to successive positions in a series of self-play games. Currently, each training data chunk wraps 32 such games.
+Empirically, I have found that LZ training data files consist in a series of training samples corresponding to successive positions in a series of self-play games. Currently, each training data chunk wraps 32 such games.
 
 By taking advantage of this property (successiveness of positions) and comparing the input planes of a given position with the input planes of the next position, it is possible to deduce the move that was actually picked by temperature (T=1) in that given position. And to check what were the policy value (p_picked) and the rank in the search (picked_rank) for that move. In turn, this allows to reconstruct the whole game and to generate a sfg file with comments on the search policy distribution.
 
@@ -95,23 +95,14 @@ I initially suspected fake data. But when I replayed some sfg with Sabaki (LZ177
 
 This second issue is affecting less training samples (1731 / 609087, or 0.28%).
 
-I then discovered that these two types of weirdness affect the very same games. In such games, either p_picked_raw = p_max_raw = 1 and the rest of the policy is de facto 0, or all values are not multiples of 1/1600th.
+I then discovered that these two issues affect the very same games and are probably one and a single issue. In such games, either p_picked_raw = p_max_raw = 1 and the rest of the policy is de facto 0, or all values are not multiples of 1/1600th.
 
-Overall, the fraction of training sample affected by this issue is 6.9%.
+**Overall, the proportion of training samples affected by this issue is 6.9%.**
 
-Since these data doesn't look synthetic (not indentical games; they seems to follow LZ177 inclination), my two cents would be that these games are genuine self-play games, but played with a different temperature, explaining the non-fractional policy values. p_max_raw = 1 value may be explained if one assume a very low temperature was used to anneal the raw visits distribution. Indeed, such value would occurs in the beginning of the game, the annealed policy would then drop a bit as the raw policy flattening past resign threshold.
+Since these data doesn't look synthetic (not indentical games; they seems to follow LZ177 inclination), my two cents would be that these games are genuine self-play games, but played with a different temperature/ T !=1 would explain the non-fractional policy values. p_max_raw = 1 value might be explained by assuming assume a very low temperature was used to anneal the raw visits distribution. Indeed, such value = 1 would occurs more in the beginning of the game, where the polciy is quite opinionated. Then the annealed policy would drop a bit as the raw policy flattens past resign threshold.
 
-To complexify a bit, I found that not all games with non-factrional policy exhibit obvious out of distribution policy and p_max = 1 ... Herebelow, for example, all games have all their positions exhibiting non-fractional policy values (but for the 1 and 0 when p_max=1), although they all look normal, but for game 1003_19 !
+The problem is that, to complexify a bit, I found that not all games with non-factrional policy exhibit obvious out of distribution policy and long series of p_max = 1 ... Herebelow, for example, all games have all their positions exhibiting non-fractional policy values (but for the 1 and 0 when p_max=1), although they all look normal, but for game 1003_19 !
 ![image](https://user-images.githubusercontent.com/37498331/46262441-8c0b7380-c501-11e8-923e-3514e61049ee.png).
+See sgf: [chunk_1003_game_21.zip](https://github.com/Ishinoshita/Leela-Zero-Training-Data-Viewer/files/2435854/chunk_1003_game_21.zip); [chunk_1003_game_19.zip](https://github.com/Ishinoshita/Leela-Zero-Training-Data-Viewer/files/2435858/chunk_1003_game_19.zip);[chunk_1003_game_18.zip](https://github.com/Ishinoshita/Leela-Zero-Training-Data-Viewer/files/2435855/chunk_1003_game_18.zip)
 
-Thus, if I'm right with my variable temperature theory, our guy, if he exists, is not only tinkering with his leelaz but also toying with the temperature parameter. Hopefully, 
-
-Of course, there might be more simple explanations (bug somewhere in leelaz or autoptp ? A known issue, already spotted ? Eager to know !).
-
-## Correlation between value collapse and policy flattening
-
-*Work in progress*
-
-## Randomness level in no-resign self-play games is still quite impressive !
-
-*Work in progress*
+Thus, if I'm right with my variable temperature theory, our guy, if he exists, is not only tinkering with his leelaz but also toying with the temperature parameter. Hopefully, the is a much less fancy explanation (bug somewhere in leelaz or autoptp ? A known issue, already spotted ?). Eager to know !
