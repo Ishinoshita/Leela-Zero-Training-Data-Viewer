@@ -89,13 +89,13 @@ and their sgf:  [chunk_1002_game_7.zip](https://github.com/Ishinoshita/LZ-Traini
 and their sgf: [chunk_1047_game_30.zip](https://github.com/Ishinoshita/Leela-Zero-Training-Data-Viewer/files/2435778/chunk_1047_game_30.zip); 
 [chunk_1042_game_7.zip](https://github.com/Ishinoshita/Leela-Zero-Training-Data-Viewer/files/2435779/chunk_1042_game_7.zip)
 
-Although p_max_raw = 1 may not be strictly impossible, a series of such values seems almost impossible.
+Although p_best_10_raw = 1.000000 is not impossible, it turns out that in most case we have also p_max_raw = p_picked_raw = 1, which may not be strictly impossible, but a series of such values seems almost impossible.
 
-I initially suspected fake data. But when I replayed some sfg with Sabaki (LZ177, 1600v, no randomness) I found that LZ177 almost always agreed with the game trajectory.
+I initially suspected fake data. But when I replayed a few sfg with Sabaki (LZ177, 1600v, no randomness) I found that LZ177 almost always agreed with the game trajectory.
 
 This second issue is affecting less training samples (1731 / 609087, or 0.28%).
 
-I then discovered that these two issues affect the very same games and are probably one and a single issue. In such games, either p_picked_raw = p_max_raw = 1 and the rest of the policy is de facto 0, or all values are not multiples of 1/1600th.
+I then discovered that these two issues affect the very same games and are probably one and a single issue. In such games, either p_picked_raw = p_max_raw = 1 and the rest of the policy is de facto 0, or all values are not multiples of 1/1600th and these values display unsually sharp policy (p_best_5 close to 1 if not equal, p_max quite high) 
 
 **Overall, the proportion of training samples affected by this issue is 6.9%.**
 
