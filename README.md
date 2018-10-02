@@ -89,7 +89,7 @@ and their sgf:  [chunk_1002_game_7.zip](https://github.com/Ishinoshita/LZ-Traini
 and their sgf: [chunk_1047_game_30.zip](https://github.com/Ishinoshita/Leela-Zero-Training-Data-Viewer/files/2435778/chunk_1047_game_30.zip); 
 [chunk_1042_game_7.zip](https://github.com/Ishinoshita/Leela-Zero-Training-Data-Viewer/files/2435779/chunk_1042_game_7.zip)
 
-Although p_best_10_raw = 1.000000 is not impossible, it turns out that in most case we have also p_max_raw = p_picked_raw = 1, which may not be strictly impossible, but a series of such values seems almost impossible.
+Although p_best_10_raw = 1.000000 is of course not impossible, it turns out that in most cases we lso have p_max_raw = p_picked_raw = 1, which may not be strictly impossible, but a series of such values seems almost impossible.
 
 I initially suspected fake data. But when I replayed a few sfg with Sabaki (LZ177, 1600v, no randomness) I found that LZ177 almost always agreed with the game trajectory.
 
@@ -99,10 +99,9 @@ I then discovered that these two issues affect the very same games and are proba
 
 **Overall, the proportion of training samples affected by this issue is 6.9%.**
 
-Since these data doesn't look synthetic (not indentical games; they seems to follow LZ177 inclination), my two cents would be that these games are genuine self-play games, but played with a different temperature/ T !=1 would explain the non-fractional policy values. p_max_raw = 1 value might be explained by assuming assume a very low temperature was used to anneal the raw visits distribution. Indeed, such value = 1 would occurs more in the beginning of the game, where the polciy is quite opinionated. Then the annealed policy would drop a bit as the raw policy flattens past resign threshold.
-
-The problem is that, to complexify a bit, I found that not all games with non-factrional policy exhibit obvious out of distribution policy and long series of p_max = 1 ... Herebelow, for example, all games have all their positions exhibiting non-fractional policy values (but for the 1 and 0 when p_max=1), although they all look normal, but for game 1003_19 !
+Since these data doesn't look synthetic (not indentical games; they seems to follow LZ177 inclination), there must be some rational explanation. Highly concentrated policy and non-fractional values made me think of genuine self-play games but played with temperature parameter  much lower than 1. However, I found that not all games with non-factrional policy exhibit obvious out of distribution policy and long series of p_max = 1 ... Herebelow, for example, all games have all their positions exhibiting non-fractional policy values (but for the 1 and 0 when p_max=1), although they all look normal, but for game 1003_19 !
 ![image](https://user-images.githubusercontent.com/37498331/46262441-8c0b7380-c501-11e8-923e-3514e61049ee.png).
-See sgf: [chunk_1003_game_21.zip](https://github.com/Ishinoshita/Leela-Zero-Training-Data-Viewer/files/2435854/chunk_1003_game_21.zip); [chunk_1003_game_19.zip](https://github.com/Ishinoshita/Leela-Zero-Training-Data-Viewer/files/2435858/chunk_1003_game_19.zip);[chunk_1003_game_18.zip](https://github.com/Ishinoshita/Leela-Zero-Training-Data-Viewer/files/2435855/chunk_1003_game_18.zip)
+See sgf: [chunk_1003_game_21.zip](https://github.com/Ishinoshita/Leela-Zero-Training-Data-Viewer/files/2435854/chunk_1003_game_21.zip); [chunk_1003_game_19.zip](https://github.com/Ishinoshita/Leela-Zero-Training-Data-Viewer/files/2435858/chunk_1003_game_19.zip);[chunk_1003_game_18.zip](https://github.com/Ishinoshita/Leela-Zero-Training-Data-Viewer/files/2435855/chunk_1003_game_18.zip). 
 
-Thus, if I'm right with my variable temperature theory, our guy, if he exists, is not only tinkering with his leelaz but also toying with the temperature parameter. Hopefully, the is a much less fancy explanation (flaw in my code or reasoning, bug somewhere in leelaz or autoptp ?). Eager to know it !
+Thus, it would take to assume some client not only tinkering with his leela code and but toying with different temperatures.
+Hopefully, there is a much less fancy explanation than this variable temperature theory. Eager to know it! 
