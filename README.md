@@ -99,9 +99,16 @@ I then discovered that these two issues affect the very same games and are proba
 
 **Overall, the proportion of training samples affected by this issue is 6.9%.**
 
+
 Since these data doesn't look synthetic (not indentical games; they seems to follow LZ177 inclination), there must be some rational explanation. Highly concentrated policy and non-fractional values made me think of genuine self-play games but played with temperature parameter  much lower than 1. However, I found that not all games with non-factrional policy exhibit obvious out of distribution policy and long series of p_max = 1 ... Herebelow, for example, all games have all their positions exhibiting non-fractional policy values (but for the 1 and 0 when p_max=1), although they all look normal, but for game 1003_19 !
 ![image](https://user-images.githubusercontent.com/37498331/46262441-8c0b7380-c501-11e8-923e-3514e61049ee.png).
 See sgf: [chunk_1003_game_21.zip](https://github.com/Ishinoshita/Leela-Zero-Training-Data-Viewer/files/2435854/chunk_1003_game_21.zip); [chunk_1003_game_19.zip](https://github.com/Ishinoshita/Leela-Zero-Training-Data-Viewer/files/2435858/chunk_1003_game_19.zip);[chunk_1003_game_18.zip](https://github.com/Ishinoshita/Leela-Zero-Training-Data-Viewer/files/2435855/chunk_1003_game_18.zip). 
 
 Thus, it would take to assume some client not only tinkering with his leela code and but toying with different temperatures.
 Hopefully, there is a much less fancy explanation than this variable temperature theory. Eager to know it! 
+
+## Update - 21 Oct 2018
+
+There is indeed a simple explanation for policy values non-multiple of 1/1600, as explained by @Ttl [here](https://github.com/gcp/leela-zero/issues/1904#issuecomment-426263786): "next branch uses no-pruning time management during the self-play game that stops the search if the best move can't change anymore (Pull Request #1497)."
+
+The other two issues described here above, 1) p_picked=0, 2) policiy very concentrated of a few if not a single move, plus another one found in LZ181 traing date and described [here](https://github.com/gcp/leela-zero/issues/1939) are still unexplained, as of 21-Oct-2018.
