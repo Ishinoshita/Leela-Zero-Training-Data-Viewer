@@ -113,8 +113,3 @@ There is indeed a simple explanation for policy values non-multiple of 1/1600, a
 
 The other two issues described here above, 1) p_picked=0,  2) policiy very concentrated of a few moves,if not a single move, plus another one found in LZ181 traing date and described [here](https://github.com/gcp/leela-zero/issues/1939) are still unexplained, as of 21-Oct-2018.
 
-
-## Update - 08 Nov 2018
-
-
-https://user-images.githubusercontent.com/37498331/48220713-570bff80-e390-11e8-9688-32c49d0cf5db.png
