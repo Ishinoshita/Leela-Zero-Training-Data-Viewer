@@ -25,6 +25,7 @@ This script also outputs an additional .csv table in which each line corresponds
     move_count:        move count, floored by 20
     side_to_play:      color to play (Black/White)
     played_by:         move belongs to winner/loser of the game
+    picked_move        board coordinate of move picked by temperature
     
     # Policy statistics:
     p_picked_raw       policy of picked move, raw
@@ -55,6 +56,7 @@ This script also outputs an additional .csv table in which each line corresponds
 
 
 # Preliminery observations on the training data
+*02-Oct2018*
 
 ## Data used
 
@@ -111,5 +113,11 @@ Hopefully, there is a much less fancy explanation than this variable temperature
 
 There is indeed a simple explanation for policy values non-multiple of 1/1600, as explained by @Ttl [here](https://github.com/gcp/leela-zero/issues/1904#issuecomment-426263786): "next branch uses no-pruning time management during the self-play game that stops the search if the best move can't change anymore (Pull Request #1497)."
 
-The other two issues described here above, 1) p_picked=0,  2) policiy very concentrated of a few moves,if not a single move, plus another one found in LZ181 traing date and described [here](https://github.com/gcp/leela-zero/issues/1939) are still unexplained, as of 21-Oct-2018.
+The other two issues described here above, 1) p_picked=0,  2) policiy very concentrated of a few moves,if not a single move, plus another one found in LZ181 traing date and described [here](https://github.com/gcp/leela-zero/issues/1939) are still unexplained.
+
+## Update - 10 Nov 2018
+
+p_picked=0 issue now explained by a bug in `train2sgf` python script. Due to a pecularity in coding of input planes respect to 361st intersection, move of board coordinate T19 was wrongly interpreted as Pass move. No more p_picked = 0 position found after bug correction.
+
+ `train2sgf` python script updated.
 
